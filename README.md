@@ -98,3 +98,113 @@ Presenter - презентер содержит основную логику п
 `emit<T extends object>(event: string, data?: T): void` - инициализация события. При вызове события в метод передается название события и объект с данными, который будет использован как аргумент для вызова обработчика.  
 `trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void` - возвращает функцию, при вызове которой инициализируется требуемое в параметрах событие с передачей в него данных из второго параметра.
 
+
+# Данные
+2 основных интерфейса. Product(Товар) и Customer(Покупатель)
+1 интерфейс для отображении неверно введенных данных покупателем CustomerErrors
+
+## Интерфейс Product
+Товар содержит:
+  `id: string` - уникальный номер,
+  `title: string` - название товара,
+  `image: string` - изоброжение товара,
+  `category: string` - категория(группа) товара,
+  `price: number | null` - цена товара,
+  `description?: string` - описание (не обязательное поле).
+
+## Интерфейс Customer
+Покупатель содержит:
+  `payment: 'card' | 'cach' | ''` - способ оплатыЖ картой или кэш
+  `address: string` - адресс 
+  `email: string` - email адресс 
+  `phone: string` - номер телефона
+
+
+## Интерфейс CustomerErrors
+CustomerErrors содержит сообщения об ошибке по конкретным полям:
+    `payment?: string` - способ оплаты
+    `address?: string` - адрес покупателя
+    `phone?: string` - номер телефона покупателя
+    `email?: string` - почтовый адресс покупателя
+
+# Модели данных
+3 основных класса. Catalog(Каталог товаров), Cart(Корзина товаров), UserCustomer(Покупатель).
+
+## Класс Catalog
+Каталог товаров содержит в себе список товаров
+
+Конструктор:  
+`constructor(initialProducts: Product[] = [])` - принимает массив товаров.
+
+Поля класса:  
+`products: Product[]` - массив товаров  
+`selectedProduct: Product | null` - выбранный товар
+
+Методы класса:
+`getProducts(): Product[]` - Получение список товаров
+`saveSelectedProduct(product: Product | null): void` - Сохранение выбранной карточки
+`getSelectedProduct(): Product | null` - Получение выбранной карточки
+`saveProducts(products: Product[]): void` - Сохранение массива товаров
+
+
+## Класс Cart
+Корзина товаров содержит в себе список товаров, который хочет купить ползователь
+
+Поля класса:  
+`items: Product[]` - массив товаров, выбранных покупателем для покупки
+
+Методы класса:
+`addItem(product: Product): void` - Добавление товара в корзину
+`removeItem(product: Product): void` - Удаление товара из корзины
+`getItemsCount(): number` - Подсчет количества товаров в корзине
+`getItems(): Product[]` - Получение список товаров в корзине
+`getTotalPrice(): number` - Сумма стоимости товаров в корзине
+`hasItemById(id: number | string): boolean` - Определяет наличие товара (true/false)
+
+## Класс UserCustomer
+
+Данный класс содержит информацию о покупатели
+
+Конструктор:  
+`constructor (initialCustomer?: Customer)` - принимает данные о покупателе.
+
+Поля класса:  
+`payment: string` - спосбо ополаты 
+`address: string` - адресс покупателя
+`phone: string` - номер телефона покупателя
+`email: string` - почтовый адрес покупателя
+
+Методы класса:
+`saveData(data: Customer): void` - Сохранение данных о покупателе
+`getData(): Customer` - Получение данных о покупателе
+`clearData(): void` - Очистка данных покупателя
+`validate(): CustomerErrors` - Проверка данных введенный покупателем
+`isValid(): boolean` - Валидация данных
+
+# Слой коммуникации
+
+## Интерфейс IProductResponse
+IProductResponse описывает структуру объекта, которую возвращает сервер  в ответ на GET-запрос по адресу /product/
+`total: number` - сколько всего товаров на сервере
+`items: Product[]` - Массив товаров
+
+## Интерфейс IOrderRequest
+IOrderRequest описывает объект, который отправляем на сервер при оформлении заказа.
+`interface IOrderRequest extends Customer` - наследует от интерфейса Customer и плюс свои поля
+`items: string[]` - Массив ID выбранных товаров
+`total: number` - Сумма заказа
+
+## Класс LarekApi
+Данный класс выполняет запрос на сервер, через композицию класса Api.
+
+Конструктор:  
+`constructor (api: IApi)` - принимает  экземпляр базового класса запросов.
+
+Поля класса:
+`api: IApi` - Хранит экземпляр базового класса Api. Используется для совершения сетевых запросов методами get и post
+
+Методы класса:
+`getProducts(): Promise<IProductResponse>` - Делает запрос на эндпоинт /product/ и получает с сервера объект содержащий общее количество товаров и массив товаров
+`createOrder(order: IOrderRequest): Promise<IOrderResult>` - отправляет на сервер данные о покупателе и выбранных товарах и получает сохраненные данные
+
+
