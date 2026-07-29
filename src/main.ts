@@ -14,18 +14,25 @@ catalogModel.saveProducts(apiProducts.items);
 
 console.log('Массив товаров из каталога: ', catalogModel.getProducts())
 
-let products = catalogModel.getProducts();
+const products = catalogModel.getProducts();
 catalogModel.saveSelectedProduct(products[0])
 
 console.log('Выбранный товар из каталога: ', catalogModel.getSelectedProduct())
-let selectedProduct = catalogModel.getSelectedProduct()
+// let selectedProduct = catalogModel.getSelectedProduct()
+
+console.log('получение одного товара по его id: ', catalogModel.getProductId(products[0].id))
 
 //Корзина товаров
 const cartModel = new Cart();
 
-if (selectedProduct) {
-  cartModel.addItem(selectedProduct)
-}
+// if (selectedProduct) {
+//   cartModel.addItem(selectedProduct)
+// }
+
+//Добавляем все товары в корзину
+products.forEach(el => {
+  cartModel.addItem(el)
+})
 
 console.log('Список товаров в корзине: ', cartModel.getItems())
 let productsInCart = cartModel.getItems()
@@ -35,34 +42,38 @@ console.log('Сумма стоимости товаров в корзине: ', 
 if (productsInCart.length > 0) {
   console.log('Узнать о наличие товара в корзине: ', cartModel.hasItemById(productsInCart[0].id))
   cartModel.removeItem(productsInCart[0])
-  console.log('Количество товаров в корзине: ', cartModel.getItemsCount())
+  console.log('После удаления одного товра количество товаров в корзине: ', cartModel.getItemsCount())
+  cartModel.clearCart()
+  console.log('После очистки корзины количество товаров в корзине: ', cartModel.getItemsCount())
 }
 
 //Покупатель
-const UserCustomerModel = new UserCustomer();
+const userCustomerModel = new UserCustomer();
 let data: Customer = {
   payment: 'card',
   address: 'address',
   phone: '880020006',
   email: 'test@mail.ru'
 }
-UserCustomerModel.saveData(data)
+userCustomerModel.saveData(data)
 
-console.log('Валидация данных: ', UserCustomerModel.isValid()); 
+console.log('Валидация данных: ', userCustomerModel.validate()); 
 
-console.log('Валидация данных: ', UserCustomerModel.getData()); 
+console.log('Получение данных о покупателе: ', userCustomerModel.getData()); 
 
-UserCustomerModel.clearData()
+userCustomerModel.clearData()
+console.log('Валидация данных после очистки данных покупателя: ', userCustomerModel.validate()); 
+
+console.log('Получение данных о покупателе: ', userCustomerModel.getData()); 
+
 
 
 //Получаем данные мз сервера
 const baseApi = new Api(API_URL)
 
 const appApi = new LarekApi(baseApi)
-let productsList = [];
 appApi.getProducts().then(res => {
-  productsList = res.items
-  catalogModel.saveProducts(productsList);
+  catalogModel.saveProducts(res.items);
   console.log('Массив товаров из каталога (сервер): ', catalogModel.getProducts())
 }).catch(err => {
   console.error(`Ошибка при загрузке товаров ${err}`)

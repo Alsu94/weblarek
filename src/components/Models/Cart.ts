@@ -35,4 +35,9 @@ export class Cart {
   public hasItemById(id: number | string): boolean {
     return this.items.some(item => item.id === id);
   }
+
+  //Очистка корзины
+  public clearCart(): void {
+    this.items = [];
+  }
 }

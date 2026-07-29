@@ -1,7 +1,7 @@
-import { Customer, CustomerErrors } from "../../types";
+import { Customer, CustomerErrors, PaymetType } from "../../types";
 
 export class UserCustomer {
-  protected payment: 'card' | 'cach' | '' = '';
+  protected payment: PaymetType = '';
   protected address: string = '';
   protected phone: string = '';
   protected email: string = '';
@@ -13,11 +13,11 @@ export class UserCustomer {
   }
 
   //Сохранение данных
-  public saveData(data: Customer): void {
-    if (data.payment !== undefined && data.payment.trim()) this.payment = data.payment;
-    if (data.address !== undefined && data.address.trim()) this.address = data.address;
-    if (data.phone !== undefined && data.phone.trim()) this.phone = data.phone;
-    if (data.email !== undefined && data.email.trim()) this.email = data.email;
+  public saveData(data: Partial<Customer>): void {
+    if (data.payment !== undefined) this.payment = data.payment;
+    if (data.address !== undefined) this.address = data.address;
+    if (data.phone !== undefined) this.phone = data.phone;
+    if (data.email !== undefined) this.email = data.email;
   }
 
   //Получение данных
@@ -39,8 +39,8 @@ export class UserCustomer {
   }
 
 
-  //Проверка данных
-  public validate(): CustomerErrors {
+  //Проверка данных и Валидация данных
+  public validate(): CustomerErrors | boolean  {
     const errors: CustomerErrors = {};
 
     if (!this.payment.trim()) {
@@ -55,17 +55,9 @@ export class UserCustomer {
     if (!this.email.trim()) {
       errors.email = 'Укажите email';
     }
-
-    return errors;
-  }
-
-  //Валидация данных
-  public isValid(): boolean | CustomerErrors {
-    if (Object.keys(this.validate()).length === 0) {
-      return true
-    } else {
-      return this.validate();
-    }
+    
+    return Object.keys(errors).length > 0 ? errors : true;
+   
   }
 
 }

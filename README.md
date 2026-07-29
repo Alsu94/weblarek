@@ -147,6 +147,7 @@ CustomerErrors содержит сообщения об ошибке по кон
 `saveSelectedProduct(product: Product | null): void` - Сохранение выбранной карточки
 `getSelectedProduct(): Product | null` - Получение выбранной карточки
 `saveProducts(products: Product[]): void` - Сохранение массива товаров
+`getProductId(productId: string)` - 
 
 
 ## Класс Cart

@@ -9,13 +9,14 @@ export class LarekApi {
   }
 
   public getProducts(): Promise<IProductResponse> {
-    return this.api.get<IProductResponse>('/product/').then((res: IProductResponse) => {
-      console.log(res)
-      return {
-        total: res.total,
-        items: res.items
-      }
-    })
+    return this.api.get<IProductResponse>('/product/')
+    // .then((res: IProductResponse) => {
+    //   console.log(res)
+    //   return {
+    //     total: res.total,
+    //     items: res.items
+    //   }
+    // })
   }
 
   public createOrder(order: IOrderRequest): Promise<IOrderResult> {

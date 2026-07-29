@@ -16,7 +16,7 @@ export class Catalog {
   }
 
   //Сохранить выбранную карточку
-  public saveSelectedProduct(product: Product | null): void {
+  public saveSelectedProduct(product: Product): void {
     this.selectedProduct = product;
   }
 
@@ -29,4 +29,10 @@ export class Catalog {
   public saveProducts(products: Product[]): void {
     this.products = products;
   }
+
+  //Поиск товара по id
+  public getProductId(productId: string): Product | undefined {
+    const index = this.products.findIndex(item => item.id === productId);
+    return (index !== -1) ? this.products[index] : undefined
+  } 
 }
