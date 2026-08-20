@@ -1,11 +1,12 @@
 import { Product } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class Catalog {
   protected products: Product[] = []; //массив все товаров
 
   protected selectedProduct: Product | null = null;  //выбранный товар
 
-  constructor(initialProducts: Product[] = []) {  //констурктор дефолтным значение принимает пустой массив
+  constructor(protected events: IEvents, initialProducts: Product[] = []) {  //констурктор дефолтным значение принимает пустой массив
     this.products = initialProducts;
   }
 
@@ -18,6 +19,8 @@ export class Catalog {
   //Сохранить выбранную карточку
   public saveSelectedProduct(product: Product): void {
     this.selectedProduct = product;
+
+    this.events.emit('card:select', { id: product.id });
   }
 
   //Получить выбранную карточку
@@ -28,6 +31,8 @@ export class Catalog {
   //Сохранить массив товаров
   public saveProducts(products: Product[]): void {
     this.products = products;
+
+    this.events.emit('items:changed', { items: this.products });
   }
 
   //Поиск товара по id

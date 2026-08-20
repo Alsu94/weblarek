@@ -15,10 +15,10 @@ export interface Product {
     description?: string;
 }
 
-export type PaymetType = 'card' | 'cach' | '';
+export type PaymentType = 'card' | 'cash' | '';
 
 export interface Customer {
-    payment: PaymetType;
+    payment: PaymentType;
     address: string;
     email: string;
     phone: string;

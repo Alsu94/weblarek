@@ -1,12 +1,13 @@
-import { Customer, CustomerErrors, PaymetType } from "../../types";
+import { Customer, CustomerErrors, PaymentType } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class UserCustomer {
-  protected payment: PaymetType = '';
+  protected payment: PaymentType = '';
   protected address: string = '';
   protected phone: string = '';
   protected email: string = '';
 
-  constructor (initialCustomer?: Customer) {
+  constructor (protected events: IEvents, initialCustomer?: Customer) {
     if (initialCustomer) {
       this.saveData(initialCustomer);
     }
@@ -18,6 +19,8 @@ export class UserCustomer {
     if (data.address !== undefined) this.address = data.address;
     if (data.phone !== undefined) this.phone = data.phone;
     if (data.email !== undefined) this.email = data.email;
+
+    this.events.emit('customer:changed');
   }
 
   //Получение данных
@@ -36,6 +39,8 @@ export class UserCustomer {
     this.address = '';
     this.phone = '';
     this.email = '';
+
+    this.events.emit('customer:changed');
   }
 
 
@@ -55,8 +60,8 @@ export class UserCustomer {
     if (!this.email.trim()) {
       errors.email = 'Укажите email';
     }
-    
-    return Object.keys(errors).length > 0 ? errors : true;
+
+    return errors
    
   }
 

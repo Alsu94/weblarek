@@ -1,11 +1,16 @@
 import { Product } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class Cart {
   protected items: Product[] = [];  //массив товаров, выбранных покупателем для покупки
 
+  constructor(protected events: IEvents) {}
+
   //Добавить товар в корзину
   public addItem(product: Product): void {
     this.items.push(product);
+
+    this.events.emit('cart:changed');
   }
 
   //Удалить товар
@@ -13,6 +18,8 @@ export class Cart {
     const index = this.items.findIndex(item => item.id === product.id);
     if (index !== -1) {
       this.items.splice(index, 1);
+
+      this.events.emit('cart:changed');
     }
   }
 
@@ -39,5 +46,7 @@ export class Cart {
   //Очистка корзины
   public clearCart(): void {
     this.items = [];
+
+    this.events.emit('cart:changed');
   }
 }

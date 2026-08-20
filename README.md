@@ -210,4 +210,266 @@ IOrderRequest описывает объект, который отправляе
 `getProducts(): Promise<IProductResponse>` - Делает запрос на эндпоинт /product/ и получает с сервера объект содержащий общее количество товаров и массив товаров
 `createOrder(order: IOrderRequest): Promise<IOrderResult>` - отправляет на сервер данные о покупателе и выбранных товарах и получает сохраненные данные
 
+# Слой View
+
+## Интерфейс IHeaderData
+  `counter: number` - счетчик количества товаров в корзине
+
+### Клас Header
+Шапка сайта. Кнопка иконки корзины и счетчик количества товаров в корзине
+
+Конструктор:
+`constructor(protected events: IEvents, container: HTMLElement)` принимает экземпляр брокера событий и корневой элемент
+
+Поля класса:
+`counterElement: HTMLElement` - HTML элемент (контейнер) для счетчика
+`basketButton: HTMLButtonElement` - кнопка HTML элемент (контейнер) для иконки корзины
+
+Сеттары класса:
+`counter(value: number)` - сеттер для изменения счетчика
+
+
+## Интерфейс IGalleryData
+  `catalog: HTMLElement` - контейнер для карточек товала 
+
+### Клас Gallery
+Контейнер для спискам карточек товаров
+
+Конструктор:
+`constructor(protected events: IEvents, container: HTMLElement)` принимает экземпляр брокера событий и корневой элемент
+
+Поля класса:
+`catalogElement: HTMLElement` - HTML элемент (контейнер) для списка карточек
+
+Сеттары класса:
+`catalog(items: HTMLElement[])` - сеттер для изменения блока галлерея
+
+
+## Интерфейс IModalData
+  `content: HTMLElement` - контейнер для тела модального окна
+
+### Клас Modal
+Модальное окно
+
+Конструктор:
+`constructor(protected events: IEvents, container: HTMLElement)` принимает экземпляр брокера событий и корневой элемент
+
+Поля класса:
+`contentElement: HTMLElement` - HTML элемент (контейнер) для контента модального окна
+`closeButton: HTMLButtonElement` - контейнер кнопка для закрытия модального окна
+
+Сеттары класса:
+`content(value: HTMLElement)` - сеттер для изменения блока контента
+
+Методы класса:
+`open()` - открывает модальное окно
+`close()` - закрывает модальное окно
+
+
+## Интерфейс IConfirmData
+  `price: number | null` - общпя стоимость товаров 
+
+### Клас Confirm
+Успешно оформленный заказ
+
+Конструктор:
+`constructor(protected events: IEvents, container: HTMLElement)` принимает экземпляр брокера событий и корневой элемент
+
+Поля класса:
+`priceElement: HTMLElement` - HTML элемент для цены
+`closeButton: HTMLButtonElement` - контейнер кнопка для закрытия модального окна
+
+Сеттары класса:
+`price(value: number | null)` - сеттер для изменения цены
+
+
+## Интерфейс ICardData
+  `id: string` - идентификатор товара
+  `title: string` - название товара
+  `price: number|null` - цена товара
+
+### Клас Card
+Карточка товара абстрактный класс
+
+Конструктор:
+`constructor(container: HTMLElement)` принимает корневой элемент
+
+Поля класса:
+`titleElement: HTMLElement` - HTML элемент для категории
+`priceElement: HTMLElement` - HTML элемент для цены
+
+Сеттары класса:
+`id(value: string)` - сеттер для идентефикатора
+`title(value: string)` - сеттер для названия товара
+`price(value: number|null)` - сеттер для цены
+
+
+## Интерфейс ICardCatalogData
+  `category: string;` - категория товара
+  `image: string` - частичный путь к картинке
+
+### Клас CardCatalog
+Карточка товара в каталоге
+
+Конструктор:
+`constructor(protected events: IEvents, container: HTMLElement)` принимает экземпляр брокера событий и корневой элемент
+
+Поля класса:
+`categoryElement: HTMLElement` - HTML элемент для категории
+`imageElement: HTMLImageElement` - HTML image элемент для картинки
+`openButton: HTMLButtonElement` - контейнер кнопка для превью карточки
+
+Сеттары класса:
+`category(value: string)` - сеттер для изменения категории
+`image(value: string)` - сеттер для изменения пути к картинки
+
+
+## Интерфейс ICardPreviewData
+  `category: string;` - категория товара
+  `image: string` - частичный путь к картинке
+  `description: string` - описание товара
+ ` buttonText?: string` - текст на кнопке
+  `buttonDisabled?: boolean` - активность кнопки
+
+### Клас CardPreview
+Превью карточка товара
+
+Конструктор:
+`constructor(protected events: IEvents, container: HTMLElement)` принимает экземпляр брокера событий и корневой элемент
+
+Поля класса:
+`categoryElement: HTMLElement` - HTML элемент для категории
+`imageElement: HTMLImageElement` - HTML image элемент для картинки
+`descriptionElement: HTMLElement` - контейнер кнопка для превью карточки
+`cardButton: HTMLButtonElement` - контейнер кнопка для добавление в корзину или удаления из корзины
+
+Сеттары класса:
+`category(value: string)` - сеттер для изменения категории
+`image(value: string)` - сеттер для изменения пути к картинки
+`description(value: string)` - сеттер для изменения описания товара
+`buttonText(value: string)` - сеттер для изменения текста на кнопке
+`buttonDisabled(value: boolean)` - сеттер для активации/деактивации кнопки
+
+
+## Интерфейс ICardBasketData
+  `index: number` - порядковый номер товара в корзине
+
+### Клас CardBasket
+Карточка товара в корзине
+
+Конструктор:
+`constructor(protected events: IEvents, container: HTMLElement)` принимает экземпляр брокера событий и корневой элемент
+
+Поля класса:
+`indexElement: HTMLElement` - HTML элемент для порядкового номера
+`basketDeleteButton: HTMLButtonElement` - контейнер кнопка для удаления товара из корзины
+
+Сеттары класса:
+`index(value: number)` - сеттер для порядкового номера
+
+
+## Интерфейс IBasketData
+  `catalogBasket: HTMLElement` - каталог корзины
+  `price: number|null` - общая стоимость товаров в корзине
+  `buttonDisabled?: boolean ` - активация / деактивая кнопки для перехода в оформление заказа
+ 
+### Клас Basket
+Корзина
+
+Конструктор:
+`constructor(protected events: IEvents, container: HTMLElement)` принимает экземпляр брокера событий и корневой элемент
+
+Поля класса:
+`catalogBasketElement: HTMLElement` - HTML элемент для списка товаров
+`priceElement: HTMLElement` - HTML элемент для общей стоиости товаров
+`basketButton: HTMLButtonElement` - кнопка оформдления заказа
+
+Сеттары класса:
+`catalogBasket(items: HTMLElement[])` - сеттер для получения списка товаров в корзине
+`price(value: number | null)` - сеттер для общей стоимость товаров в корзине
+`buttonDisabled(value: boolean)` - сеттер для активация / деактивая кнопки для перехода в оформление заказа
+
+
+## Интерфейс IFormData
+  `valid: boolean` - проверка на валлидность данных
+  `errors: string[]` - список ошибок 
+ 
+### Клас Form
+Абстрактный класс  родительский класс для Заказа и Контактных данных
+
+Конструктор:
+`constructor(protected events: IEvents, container: HTMLElement)` принимает экземпляр брокера событий и корневой элемент
+
+Поля класса:
+`errorsElement: HTMLElement` - HTML элемент для списка ошибок
+`priceElement: HTMLElement` - HTML элемент для общей стоиости товаров
+`submitButton: HTMLButtonElement` - кнопка отправки формы
+
+Сеттары класса:
+`valid(value: boolean))` - сеттер для проверки валидности формы
+`errors(value: string[])` - сеттер для списка ошибок
+
+
+## Интерфейс IOrderData
+  `address: HTMLInputElement` - адрес доставки
+  `payment: PaymentType` - способ оплаты
+ 
+### Клас Order
+Класс заказа, где выбирается способ оплаты и адрес доставки
+
+Конструктор:
+`constructor(protected events: IEvents, container: HTMLElement)` принимает экземпляр брокера событий и корневой элемент
+
+Поля класса:
+`cardButtonElement: HTMLButtonElement` - кнопка выбора по оплаты онлайн
+`cashButtonElement: HTMLButtonElement` - кнопка выбора по оплаты при получении
+
+Сеттары класса:
+`address(value: string)` - сеттер для адреса доставки
+`payment(value: PaymentType)` - сеттер для способа оплаты
+
+
+## Интерфейс IContactsData
+  `email: HTMLInputElement` - эл.почта
+  `phone: HTMLInputElement` - телефон
+ 
+### Клас Contacts
+Класс Contacts, контактная информация о покупателе
+
+Конструктор:
+`constructor(protected events: IEvents, container: HTMLElement)` принимает экземпляр брокера событий и корневой элемент
+
+Сеттары класса:
+`email(value: string)` - сеттер для эл.почты
+`phone(value: string)` - сеттер для номера телефона
+
+
+# События
+
+`items:changed` - изменение списка товаров
+`card:select` - выбор карточки товара в каталоге, передает idю Презентер открывает карточку в модальном отклоненный
+`cart:changed` - изменение карточки (Удалине/Добавление/Очистка корзины)
+`customer:changed` - изменение данных о покупателе
+`card:click` - клик по карточке товара в каталоге
+`card:toggle` - клик по кнопке Купить/Удалить в карточке товара
+`basket:open` - клик по иконке корзины открывает модальное окно
+`cardBasket:delete` - клик по иконке удалить товар из корзины
+`basket:processing` - клик по кнопке оформить в корзине
+`order.payment:change` - клик по кнопке выбора оплаты (Онлайн/При получении)
+`order.address:change` - инпут ввод адресса
+`order:submit` - клик форма заказа - кнопка Далее
+`contacts.email:change` - инпут ввод email
+`contacts.phone:change` - инпут ввод номера телефона
+`contacts:submit` - клик форма контакты - кнопка оплатить, отправка формы на сервер
+`confirm:close` - клик за новыми покупками (закрыть модалку)
+
+# Презентер
+
+Презентер отвечает за логику приложения и связывает Модели и Представления. Презентер реализован в main.ts. Презентер только обрабатывает события
+
+
+
+
+
+
 
