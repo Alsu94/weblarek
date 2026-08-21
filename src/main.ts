@@ -183,7 +183,7 @@ events.on('basket:processing', () => {
 //Изменились данные покупателя - сообщила модель
 events.on('customer:changed', () => {
 
-  validateForm()
+  renderAndValidateForm()
 
 })
 
@@ -234,12 +234,6 @@ events.on('contacts:submit', () => {
     cartModel.clearCart()
     userCustomerModel.clearData()
 
-    //очищаем инпуты и кнопки выбора способа оплаты
-    order.address = ''
-    order.payment = ''
-    contacts.email = ''
-    contacts.phone = ''
-
     modal.content = confirm.render()
   }).catch(err => {
     console.error(`Ошибка при оформлении товаров ${err}`)
@@ -271,29 +265,32 @@ function refreshBasket() {
   modal.content = basketCatalog.render()
 }
 
-function validateForm() {
+function renderAndValidateForm() {
   const errors = userCustomerModel.validate() as CustomerErrors;
 
-  const orderFormElement = document.querySelector('form[name="order"]');
-  if (orderFormElement) {
-    const orderErrors: string[] = [];
-    if (errors.payment) orderErrors.push(errors.payment);
-    if (errors.address) orderErrors.push(errors.address);
-  
-    order.errors = orderErrors;
-    order.valid = orderErrors.length === 0;
-  }
+  const customerData = userCustomerModel.getData()
 
-  const contactsFormElement = document.querySelector('form[name="contacts"]');
-  if (contactsFormElement) {
-    const contactsErrors: string[] = [];
-    if (errors.email) contactsErrors.push(errors.email);
-    if (errors.phone) contactsErrors.push(errors.phone);
+  const orderErrors: string[] = [];
+
+  if (errors.payment) orderErrors.push(errors.payment);
+  if (errors.address) orderErrors.push(errors.address);
   
-    contacts.errors = contactsErrors;
-    contacts.valid = contactsErrors.length === 0;
-  }
+  order.errors = orderErrors;
+  order.valid = orderErrors.length === 0;
+  order.address = customerData.address;
+  order.payment = customerData.payment;
+  order.render();
+
+  const contactsErrors: string[] = [];
+
+  if (errors.email) contactsErrors.push(errors.email);
+  if (errors.phone) contactsErrors.push(errors.phone);
   
+  contacts.errors = contactsErrors; 
+  contacts.valid = contactsErrors.length === 0;
+  contacts.email = customerData.email;
+  contacts.phone = customerData.phone;
+  contacts.render();
 }
 
 

@@ -6,9 +6,11 @@ export class UserCustomer {
   protected address: string = '';
   protected phone: string = '';
   protected email: string = '';
+  protected initialCustomer: Customer | null = null;
 
   constructor (protected events: IEvents, initialCustomer?: Customer) {
     if (initialCustomer) {
+      this.initialCustomer = initialCustomer;
       this.saveData(initialCustomer);
     }
   }
@@ -35,17 +37,22 @@ export class UserCustomer {
 
   //очистка данных покупателя
   public clearData(): void {
-    this.payment = '';
-    this.address = '';
-    this.phone = '';
-    this.email = '';
 
-    this.events.emit('customer:changed');
+    if (this.initialCustomer) {
+      this.saveData(this.initialCustomer)
+    } else {
+      this.saveData({
+        payment: '',
+        address: '',
+        phone: '',
+        email: ''
+      })
+    }
   }
 
 
   //Проверка данных и Валидация данных
-  public validate(): CustomerErrors | boolean  {
+  public validate(): CustomerErrors  {
     const errors: CustomerErrors = {};
 
     if (!this.payment.trim()) {
